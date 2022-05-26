@@ -1,0 +1,67 @@
+These are queries from the "Learning SQL Programing" course, hosted by LinkedIn Learning. The database contained two tables (people, states) from which the data was pulled.
+I completed the course on 5/24/2022.
+
+-- Using ORDER BY to organize responses
+SELECT first_name,last_name,team, shirt_or_hat
+from people
+order by shirt_or_hat, team 
+
+--Using JOINS to retrieve data from more than one table. 
+
+SELECT people.first_name, people.last_name, people.state_code, states.state_name, states.state_abbrev
+from states
+LEFT JOIN people 
+on people.state_code=states.state_abbrev
+
+--Using DISTINCT and JOIN to determine the states where no people are from
+
+SELECT DISTINCT (people.state_code), states.state_abbrev
+from states
+Left JOIN people 
+on people.state_code=states.state_abbrev 
+order by people.state_code
+
+--Create a QUERY showing how many hats need to be shipped to each state name 
+
+Select states.state_name, people.shirt_or_hat, count(people.shirt_or_hat)
+from states
+JOIN people
+ON states.state_abbrev=people.state_code 
+WHERE shirt_or_hat='hat'
+Group by people.shirt_or_hat, states.state_name 
+
+Create a QUERY showing how many members of each team are in each geographic division
+
+Select states.division, people.team, count(people.team)
+from states
+JOIN people
+on people.state_code=states.state_abbrev
+Group by states.division, people.team 
+	
+--Show maximum quiz score and average quiz score for each state. Sort with the state with the highest average score is at the top of the results.
+
+SELECT states.state_name, Max (people.quiz_points)as max_score, AVG (people.quiz_points) as average_score
+from states
+JOIN people
+On states.state_abbrev=people.state_code 
+Group by states.state_name
+ORDER by average_score DESC 
+
+--INSERT, UPDATE, and DELETE data from the DATABASE
+
+INSERT INTO people 
+(first_name, last_name, city, state_code, shirt_or_hat, quiz_points, team)
+VALUES 
+('Walter','St. John','Buffalo','NY','hat','93','Baffled Badgers'),
+('Emerald','Chou','Topeka','KS','shirt','92','Angry Ants')*/
+
+--Bonnie Brooks wants a shirt, not a hat (updating records)
+UPDATE people
+SET shirt_or_hat="shirt"
+WHERE id_number=12
+
+--Lois Hart requests to be removed from our list
+
+DELETE from people 
+WHERE first_name="Lois" and last_name="Hart"
+
